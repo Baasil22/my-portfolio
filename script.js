@@ -1,6 +1,11 @@
 // ==================== Typing Animation ====================
 const typingTexts = [
-    'Cybersecurity Professional',
+    'Junior Cybersecurity Engineer',
+    'SOC Analyst L1',
+    'Application Security Analyst',
+    'VAPT Engineer',
+    'Cybersecurity Analyst – Graduate',
+    'Threat Detection Engineer',
     'Penetration Tester'
 ];
 
@@ -132,42 +137,8 @@ if (skillsSection) {
     skillsObserver.observe(skillsSection);
 }
 
-// ==================== Contact Form Handling (Web3Forms + Pro Toast) ====================
-const contactForm =
-    document.getElementById('contact-form') ||
-    document.getElementById('submit-form') ||
-    document.getElementById('web3form');
-
-if (contactForm) {
-    contactForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        // Build payload for Web3Forms
-        const formData = new FormData(contactForm);
-
-        // Ensure Web3Forms access key exists even if hidden input is missing
-        if (!formData.get('access_key')) {
-            formData.set('access_key', '40b5c195-76e5-4976-8f9f-b6a7f8f3cb44');
-        }
-
-        try {
-            const res = await fetch('https://api.web3forms.com/submit', {
-                method: 'POST',
-                body: formData
-            });
-            const data = await res.json();
-
-            if (data.success) {
-                proToast('success', 'Message sent successfully! Thank you for reaching out.');
-                contactForm.reset();
-            } else {
-                proToast('error', 'Error: ' + (data.message || 'Submission failed'));
-            }
-        } catch (err) {
-            proToast('error', 'Network error. Please try again.');
-        }
-    });
-}
+// Contact form handling is done via the inline script in index.html
+// to avoid duplicate event listeners and ensure proper Web3Forms integration
 
 // ==================== Notification System ====================
 function showNotification(message, type = 'info') {
@@ -249,8 +220,8 @@ function updateActiveLink() {
 window.addEventListener('scroll', updateActiveLink);
 
 // ==================== Cursor Trail Effect ====================
-// const coords = { x: 0, y: 0 };
-// const circles = document.querySelectorAll('.circle');
+const coords = { x: 0, y: 0 };
+let circles = document.querySelectorAll('.circle');
 
 if (circles.length === 0) {
     // Create cursor trail circles
@@ -352,7 +323,7 @@ const statsObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting && !statsAnimated) {
             const stats = document.querySelectorAll('.stat h3');
-            const values = [10, 3, 100];
+            const values = [5, 4, 20];
             stats.forEach((stat, index) => {
                 setTimeout(() => {
                     animateValue(stat, 0, values[index], 2000);
@@ -405,39 +376,39 @@ console.log('%cInterested in the code? Let\'s connect!', 'color: #4facfe; font-s
 
 // ==================== Professional Toast (no CSS file changes) ====================
 (function () {
-  const TOAST_TTL = 3500;
+    const TOAST_TTL = 3500;
 
-  function ensureContainer() {
-    let c = document.getElementById('pro-toast-container');
-    if (!c) {
-      c = document.createElement('div');
-      c.id = 'pro-toast-container';
-      c.style.cssText = `
+    function ensureContainer() {
+        let c = document.getElementById('pro-toast-container');
+        if (!c) {
+            c = document.createElement('div');
+            c.id = 'pro-toast-container';
+            c.style.cssText = `
         position: fixed; right: 20px; bottom: 20px; z-index: 10000;
         display: flex; flex-direction: column; gap: 12px;
       `;
-      document.body.appendChild(c);
+            document.body.appendChild(c);
+        }
+        return c;
     }
-    return c;
-  }
 
-  function colorFor(type) {
-    const root = getComputedStyle(document.documentElement);
-    const primary = (root.getPropertyValue('--primary-color') || '#00f2fe').trim();
-    if (type === 'success') return primary;
-    if (type === 'error') return '#ff6b6b';
-    if (type === 'info') return '#4facfe';
-    return primary;
-  }
+    function colorFor(type) {
+        const root = getComputedStyle(document.documentElement);
+        const primary = (root.getPropertyValue('--primary-color') || '#00f2fe').trim();
+        if (type === 'success') return primary;
+        if (type === 'error') return '#ff6b6b';
+        if (type === 'info') return '#4facfe';
+        return primary;
+    }
 
-  window.proToast = function (type, message) {
-    const container = ensureContainer();
-    const toast = document.createElement('div');
-    const accent = colorFor(type);
+    window.proToast = function (type, message) {
+        const container = ensureContainer();
+        const toast = document.createElement('div');
+        const accent = colorFor(type);
 
-    toast.setAttribute('role', 'status');
-    toast.setAttribute('aria-live', 'polite');
-    toast.style.cssText = `
+        toast.setAttribute('role', 'status');
+        toast.setAttribute('aria-live', 'polite');
+        toast.style.cssText = `
       min-width: 280px; max-width: 420px; padding: 14px 16px;
       border-radius: 12px; background: #0f1631; color: #e6edf6;
       box-shadow: 0 10px 30px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.06) inset;
@@ -446,37 +417,132 @@ console.log('%cInterested in the code? Let\'s connect!', 'color: #4facfe; font-s
       transform: translateY(10px); opacity: 0; transition: all .25s ease;
     `;
 
-    const dot = document.createElement('div');
-    dot.style.cssText = `width:10px;height:10px;border-radius:50%;margin-top:6px;background:${accent};flex:0 0 auto;`;
+        const dot = document.createElement('div');
+        dot.style.cssText = `width:10px;height:10px;border-radius:50%;margin-top:6px;background:${accent};flex:0 0 auto;`;
 
-    const text = document.createElement('div');
-    text.style.cssText = `font-size:14px;line-height:1.5;`;
-    text.textContent = message;
+        const text = document.createElement('div');
+        text.style.cssText = `font-size:14px;line-height:1.5;`;
+        text.textContent = message;
 
-    const close = document.createElement('button');
-    close.setAttribute('aria-label', 'Close notification');
-    close.textContent = '✕';
-    close.style.cssText = `
+        const close = document.createElement('button');
+        close.setAttribute('aria-label', 'Close notification');
+        close.textContent = '✕';
+        close.style.cssText = `
       background: transparent; border: 0; color: #9fb3c8; margin-left: auto;
       cursor: pointer; font-size: 14px; padding: 0; line-height: 1;
     `;
-    close.onclick = dismiss;
+        close.onclick = dismiss;
 
-    toast.append(dot, text, close);
-    container.appendChild(toast);
+        toast.append(dot, text, close);
+        container.appendChild(toast);
 
-    requestAnimationFrame(() => {
-      toast.style.transform = 'translateY(0)';
-      toast.style.opacity = '1';
+        requestAnimationFrame(() => {
+            toast.style.transform = 'translateY(0)';
+            toast.style.opacity = '1';
+        });
+
+        let timer = setTimeout(dismiss, TOAST_TTL);
+
+        function dismiss() {
+            clearTimeout(timer);
+            toast.style.transform = 'translateY(10px)';
+            toast.style.opacity = '0';
+            setTimeout(() => container.contains(toast) && container.removeChild(toast), 250);
+        }
+    };
+})();
+
+// ==================== Expandable Card Modals with Hover ====================
+(function () {
+    // Get all expandable cards
+    const expandableCards = document.querySelectorAll('.expandable-card');
+    const allModals = document.querySelectorAll('.card-modal');
+    let hoverTimeout = null;
+    let activeModal = null;
+    let openedByClick = false; // Track if modal was opened by click
+
+    // Function to open modal with animation
+    function openModal(modal, byClick) {
+        if (!modal) return;
+        activeModal = modal;
+        openedByClick = byClick;
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+
+        // Trigger animation
+        requestAnimationFrame(() => {
+            modal.classList.add('active');
+        });
+    }
+
+    // Function to close modal with animation
+    function closeModal(modal) {
+        if (!modal) return;
+        modal.classList.remove('active');
+
+        setTimeout(() => {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+            if (activeModal === modal) {
+                activeModal = null;
+                openedByClick = false;
+            }
+        }, 300);
+    }
+
+    // Open modal when clicking OR hovering on expandable card
+    expandableCards.forEach(card => {
+        const modalId = card.getAttribute('data-modal');
+        const modal = document.getElementById(modalId);
+
+        // Click to open (requires X to close)
+        card.addEventListener('click', (e) => {
+            clearTimeout(hoverTimeout);
+            openModal(modal, true);
+        });
+
+        // Hover to open with delay (auto-closes when mouse leaves)
+        card.addEventListener('mouseenter', () => {
+            hoverTimeout = setTimeout(() => {
+                if (!activeModal) {
+                    openModal(modal, false);
+                }
+            }, 400);
+        });
+
+        card.addEventListener('mouseleave', () => {
+            clearTimeout(hoverTimeout);
+        });
     });
 
-    let timer = setTimeout(dismiss, TOAST_TTL);
+    // Close modal when clicking close button
+    allModals.forEach(modal => {
+        const closeBtn = modal.querySelector('.modal-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                closeModal(modal);
+            });
+        }
 
-    function dismiss() {
-      clearTimeout(timer);
-      toast.style.transform = 'translateY(10px)';
-      toast.style.opacity = '0';
-      setTimeout(() => container.contains(toast) && container.removeChild(toast), 250);
-    }
-  };
+        // Close modal when clicking outside content
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal(modal);
+            }
+        });
+
+        // Auto-close when mouse leaves modal (only if opened by hover)
+        modal.addEventListener('mouseleave', () => {
+            if (activeModal === modal && !openedByClick) {
+                closeModal(modal);
+            }
+        });
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && activeModal) {
+            closeModal(activeModal);
+        }
+    });
 })();
