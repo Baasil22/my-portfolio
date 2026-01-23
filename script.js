@@ -219,63 +219,6 @@ function updateActiveLink() {
 
 window.addEventListener('scroll', updateActiveLink);
 
-// ==================== Cursor Trail Effect ====================
-const coords = { x: 0, y: 0 };
-let circles = document.querySelectorAll('.circle');
-
-if (circles.length === 0) {
-    // Create cursor trail circles
-    for (let i = 0; i < 20; i++) {
-        const circle = document.createElement('div');
-        circle.className = 'circle';
-        circle.style.cssText = `
-            position: fixed;
-            pointer-events: none;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: rgba(0, 242, 254, 0.3);
-            z-index: 9999;
-            transition: transform 0.1s;
-        `;
-        document.body.appendChild(circle);
-    }
-}
-
-const allCircles = document.querySelectorAll('.circle');
-
-allCircles.forEach((circle, index) => {
-    circle.x = 0;
-    circle.y = 0;
-});
-
-window.addEventListener('mousemove', (e) => {
-    coords.x = e.clientX;
-    coords.y = e.clientY;
-});
-
-function animateCircles() {
-    let x = coords.x;
-    let y = coords.y;
-
-    allCircles.forEach((circle, index) => {
-        circle.style.left = x - 5 + 'px';
-        circle.style.top = y - 5 + 'px';
-        circle.style.transform = `scale(${(allCircles.length - index) / allCircles.length})`;
-
-        circle.x = x;
-        circle.y = y;
-
-        const nextCircle = allCircles[index + 1] || allCircles[0];
-        x += (nextCircle.x - x) * 0.3;
-        y += (nextCircle.y - y) * 0.3;
-    });
-
-    requestAnimationFrame(animateCircles);
-}
-
-animateCircles();
-
 // ==================== Particle Background ====================
 function createParticles() {
     const hero = document.querySelector('.hero');
