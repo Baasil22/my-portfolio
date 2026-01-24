@@ -264,6 +264,26 @@ body {
     transform: translateY(-3px);
 }
 
+.btn-cv {
+    background: linear-gradient(135deg, rgba(255, 65, 108, 0.1), rgba(255, 75, 43, 0.1));
+    border: 2px solid #ff416c;
+    color: #ff6b8a;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-cv i {
+    font-size: 1.1rem;
+}
+
+.btn-cv:hover {
+    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(255, 65, 108, 0.4);
+}
+
 .social-links {
     display: flex;
     gap: 1.5rem;
