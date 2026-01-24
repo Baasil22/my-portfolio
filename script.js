@@ -400,15 +400,12 @@ console.log('%cInterested in the code? Let\'s connect!', 'color: #4facfe; font-s
     // Get all expandable cards
     const expandableCards = document.querySelectorAll('.expandable-card');
     const allModals = document.querySelectorAll('.card-modal');
-    let hoverTimeout = null;
     let activeModal = null;
-    let openedByClick = false; // Track if modal was opened by click
 
     // Function to open modal with animation
-    function openModal(modal, byClick) {
+    function openModal(modal) {
         if (!modal) return;
         activeModal = modal;
-        openedByClick = byClick;
         modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
 
@@ -428,37 +425,21 @@ console.log('%cInterested in the code? Let\'s connect!', 'color: #4facfe; font-s
             document.body.style.overflow = '';
             if (activeModal === modal) {
                 activeModal = null;
-                openedByClick = false;
             }
         }, 300);
     }
 
-    // Open modal when clicking OR hovering on expandable card
+    // Open modal only on click
     expandableCards.forEach(card => {
         const modalId = card.getAttribute('data-modal');
         const modal = document.getElementById(modalId);
 
-        // Click to open (requires X to close)
-        card.addEventListener('click', (e) => {
-            clearTimeout(hoverTimeout);
-            openModal(modal, true);
-        });
-
-        // Hover to open with delay (auto-closes when mouse leaves)
-        card.addEventListener('mouseenter', () => {
-            hoverTimeout = setTimeout(() => {
-                if (!activeModal) {
-                    openModal(modal, false);
-                }
-            }, 400);
-        });
-
-        card.addEventListener('mouseleave', () => {
-            clearTimeout(hoverTimeout);
+        card.addEventListener('click', () => {
+            openModal(modal);
         });
     });
 
-    // Close modal when clicking close button
+    // Close modal when clicking close button or outside
     allModals.forEach(modal => {
         const closeBtn = modal.querySelector('.modal-close');
         if (closeBtn) {
@@ -470,13 +451,6 @@ console.log('%cInterested in the code? Let\'s connect!', 'color: #4facfe; font-s
         // Close modal when clicking outside content
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
-                closeModal(modal);
-            }
-        });
-
-        // Auto-close when mouse leaves modal (only if opened by hover)
-        modal.addEventListener('mouseleave', () => {
-            if (activeModal === modal && !openedByClick) {
                 closeModal(modal);
             }
         });
