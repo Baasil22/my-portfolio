@@ -1,0 +1,7 @@
+# Robots.txt for mohammedbaasilmuneer.site
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://mohammedbaasilmuneer.site/sitemap.xml
